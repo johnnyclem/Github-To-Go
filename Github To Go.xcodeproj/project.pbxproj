@@ -22,6 +22,7 @@
 		EF1FE77718A02C59009D2AE5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF1FE75618A02C59009D2AE5 /* UIKit.framework */; };
 		EF1FE77F18A02C59009D2AE5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EF1FE77D18A02C59009D2AE5 /* InfoPlist.strings */; };
 		EF1FE78118A02C59009D2AE5 /* Github_To_GoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EF1FE78018A02C59009D2AE5 /* Github_To_GoTests.m */; };
+		EF1FE78C18A02CB2009D2AE5 /* CFNetworkController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF1FE78B18A02CB2009D2AE5 /* CFNetworkController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		EF1FE77C18A02C59009D2AE5 /* Github To GoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Github To GoTests-Info.plist"; sourceTree = "<group>"; };
 		EF1FE77E18A02C59009D2AE5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EF1FE78018A02C59009D2AE5 /* Github_To_GoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Github_To_GoTests.m; sourceTree = "<group>"; };
+		EF1FE78A18A02CB2009D2AE5 /* CFNetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFNetworkController.h; sourceTree = "<group>"; };
+		EF1FE78B18A02CB2009D2AE5 /* CFNetworkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFNetworkController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +127,8 @@
 				EF1FE76B18A02C59009D2AE5 /* CFDetailViewController.m */,
 				EF1FE76D18A02C59009D2AE5 /* Images.xcassets */,
 				EF1FE75918A02C59009D2AE5 /* Supporting Files */,
+				EF1FE78A18A02CB2009D2AE5 /* CFNetworkController.h */,
+				EF1FE78B18A02CB2009D2AE5 /* CFNetworkController.m */,
 			);
 			path = "Github To Go";
 			sourceTree = "<group>";
@@ -258,6 +263,7 @@
 				EF1FE76918A02C59009D2AE5 /* CFMasterViewController.m in Sources */,
 				EF1FE75F18A02C59009D2AE5 /* main.m in Sources */,
 				EF1FE76C18A02C59009D2AE5 /* CFDetailViewController.m in Sources */,
+				EF1FE78C18A02CB2009D2AE5 /* CFNetworkController.m in Sources */,
 				EF1FE76318A02C59009D2AE5 /* CFAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

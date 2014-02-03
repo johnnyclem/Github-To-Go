@@ -10,7 +10,6 @@
 
 @interface CFDetailViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (strong, nonatomic) id detailItem;
+@property (strong, nonatomic) NSMutableDictionary *repo;
 
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 @end
