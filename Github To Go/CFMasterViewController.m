@@ -12,6 +12,9 @@
 #import "User.h"
 
 @interface CFMasterViewController () <UISearchBarDelegate>
+{
+    NSPredicate *_searchPredicate;
+}
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
@@ -32,12 +35,21 @@
 {
     [super viewDidLoad];
     
+    _searchPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", @"iOS"];
+
 //    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 //
 //    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
 //    self.navigationItem.rightBarButtonItem = addButton;
     
     self.detailViewController = (CFDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    NSLog(@"Text Changed: %@", searchText);
+    _searchPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", searchText];
+    [self.tableView reloadData];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
@@ -51,9 +63,8 @@
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext]];
     [fetchRequest setPredicate: [NSPredicate predicateWithFormat:@"repoID == %@", repoID]];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey: @"repoID" ascending:YES]]];
-    NSArray *existingRepos = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
 
-    if (existingRepos.count) {
+    if ([self.managedObjectContext executeFetchRequest:fetchRequest error:&error]) {
         NSLog(@"Repo %@ Already Exists", repo[@"name"]);
     } else {
         NSEntityDescription *repoEntity = [NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext];
@@ -84,9 +95,12 @@
     NSURL *searchURL = [NSURL URLWithString:searchString];
 
     [self downloadReposForSearchURL:searchURL];
-//    
-//    NSArray *employeeIDs = [[listOfIDsAsString componentsSeparatedByString:@"\n"]
-//                            sortedArrayUsingSelector: @selector(compare:)];
+
+//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+//    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext]];
+//    [fetchRequest setPredicate: [NSPredicate predicateWithFormat:@"repoID == %@", repoID]];
+//    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey: @"repoID" ascending:YES]]];
+//    NSArray *existingRepos = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,8 +119,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    NSArray *filteredRepos = [[self.fetchedResultsController fetchedObjects] filteredArrayUsingPredicate:_searchPredicate];
+    return filteredRepos.count;
+    
+//    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+//    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -231,7 +248,9 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    Repo *repo = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSArray *filteredRepos = [[self.fetchedResultsController fetchedObjects] filteredArrayUsingPredicate:_searchPredicate];
+    Repo *repo = [filteredRepos objectAtIndex:indexPath.row];
+    
     cell.textLabel.text = repo.name;
     cell.detailTextLabel.text = repo.user.login;
 }
