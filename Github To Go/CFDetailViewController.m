@@ -8,7 +8,7 @@
 
 #import "CFDetailViewController.h"
 
-@interface CFDetailViewController ()
+@interface CFDetailViewController () <UIWebViewDelegate>
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
@@ -40,11 +40,14 @@
     // Update the user interface for the detail item.
 //    [_webView setFrame:CGRectMake(0, 0, 768, 1024)];
     
-    if (self.repo) {
-        NSURLRequest *repoRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:_repo[@"html_url"]]];
-        [_webView loadRequest:repoRequest];
-        self.navigationItem.title = [self.repo objectForKey:@"name"];
+    if (!self.repo.htmlString) {
+        NSString *webString = [NSString stringWithContentsOfURL:[NSURL URLWithString:self.repo.html_url] encoding:NSUTF8StringEncoding error:nil];
+        self.repo.htmlString = webString;
+        [self.repo.managedObjectContext save:nil];
     }
+
+    [_webView loadHTMLString:self.repo.htmlString baseURL:nil];
+    self.navigationItem.title = self.repo.name;
 }
 
 - (void)viewDidLoad

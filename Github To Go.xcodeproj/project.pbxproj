@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF3F39EA18A9ADD700B11E01 /* Repo.m in Sources */ = {isa = PBXBuildFile; fileRef = EF3F39E918A9ADD700B11E01 /* Repo.m */; };
+		EF3F39ED18A9ADD700B11E01 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = EF3F39EC18A9ADD700B11E01 /* User.m */; };
 		EFAA61801891C8F700C42248 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFAA617F1891C8F700C42248 /* Foundation.framework */; };
 		EFAA61821891C8F700C42248 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFAA61811891C8F700C42248 /* CoreGraphics.framework */; };
 		EFAA61841891C8F700C42248 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFAA61831891C8F700C42248 /* UIKit.framework */; };
@@ -39,6 +41,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EF3F39E818A9ADD700B11E01 /* Repo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Repo.h; sourceTree = "<group>"; };
+		EF3F39E918A9ADD700B11E01 /* Repo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Repo.m; sourceTree = "<group>"; };
+		EF3F39EB18A9ADD700B11E01 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		EF3F39EC18A9ADD700B11E01 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		EFAA617C1891C8F700C42248 /* Github To Go.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github To Go.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFAA617F1891C8F700C42248 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EFAA61811891C8F700C42248 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -169,6 +175,10 @@
 			isa = PBXGroup;
 			children = (
 				EFAA61991891C8F700C42248 /* Github_To_Go.xcdatamodeld */,
+				EF3F39EB18A9ADD700B11E01 /* User.h */,
+				EF3F39EC18A9ADD700B11E01 /* User.m */,
+				EF3F39E818A9ADD700B11E01 /* Repo.h */,
+				EF3F39E918A9ADD700B11E01 /* Repo.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -293,8 +303,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFAA618E1891C8F700C42248 /* main.m in Sources */,
+				EF3F39ED18A9ADD700B11E01 /* User.m in Sources */,
 				EFAA619B1891C8F700C42248 /* Github_To_Go.xcdatamodeld in Sources */,
 				EFAA61921891C8F700C42248 /* CFAppDelegate.m in Sources */,
+				EF3F39EA18A9ADD700B11E01 /* Repo.m in Sources */,
 				EFAA61A11891C8F700C42248 /* CFDetailViewController.m in Sources */,
 				EFAA619E1891C8F700C42248 /* CFMasterViewController.m in Sources */,
 			);
@@ -515,6 +527,7 @@
 				EFAA61BC1891C8F700C42248 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EFAA61BD1891C8F700C42248 /* Build configuration list for PBXNativeTarget "Github To GoTests" */ = {
 			isa = XCConfigurationList;
@@ -523,6 +536,7 @@
 				EFAA61BF1891C8F700C42248 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

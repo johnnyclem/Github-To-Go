@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Repo.h"
 
 @interface CFDetailViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (strong, nonatomic) NSDictionary *repo;
+@property (strong, nonatomic) Repo *repo;
 
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 @end

@@ -8,6 +8,8 @@
 
 #import "CFMasterViewController.h"
 #import "CFDetailViewController.h"
+#import "Repo.h"
+#import "User.h"
 
 @interface CFMasterViewController () <UISearchBarDelegate>
 
@@ -51,7 +53,7 @@
 {
     NSLog(@"Performing Search For: %@", sender.text);
     NSError *error;
-    NSString *searchString = [NSString stringWithFormat:@"https://api.github.com/search/repositories?q=%@&sort=stars&order=desc", sender.text];
+    NSString *searchString = [NSString stringWithFormat:@"https://api.github.com/search/repositories?q=%@", sender.text];
     NSURL *searchURL = [NSURL URLWithString:searchString];
     
     NSData *repoData = [NSData dataWithContentsOfURL:searchURL];
@@ -59,7 +61,18 @@
                                                              options:NSJSONReadingMutableContainers
                                                                error:&error];
     _repos = [repoDict objectForKey:@"items"];
-    [self.tableView reloadData];
+    
+    for (NSDictionary *repo in _repos) {
+        NSEntityDescription *repoEntity = [NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext];
+        Repo *newRepo = [[Repo alloc] initWithEntity:repoEntity insertIntoManagedObjectContext:self.managedObjectContext withJSONDictionary:repo];
+        [newRepo.managedObjectContext save:&error];
+        if (error) {
+            NSLog(@"Error Saving New Object");
+        } else {
+            NSLog(@"Added Repo To Core Data");
+        }
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -98,9 +111,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _repos.count;
-//    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-//    return [sectionInfo numberOfObjects];
+//    return _repos.count;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -141,8 +154,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        NSDictionary *repo = _repos[indexPath.row];
+        Repo *repo = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         self.detailViewController.repo = repo;
     }
 }
@@ -151,8 +163,7 @@
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-//        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        NSDictionary *repo = _repos[indexPath.row];
+        Repo *repo = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         [[segue destinationViewController] setRepo:repo];
     }
 }
@@ -167,21 +178,21 @@
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
     NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Repos"];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -258,9 +269,9 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-//    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//    cell.textLabel.text = [[object valueForKey:@"timeStamp"] description];
-    cell.textLabel.text = [[_repos objectAtIndex:indexPath.row] objectForKey:@"name"];
+    Repo *repo = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = repo.name;
+    cell.detailTextLabel.text = repo.user.login;
 }
 
 @end

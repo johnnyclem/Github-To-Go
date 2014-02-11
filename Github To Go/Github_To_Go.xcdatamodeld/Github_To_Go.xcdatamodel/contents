@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Event">
-        <attribute name="timeStamp" optional="YES" attributeType="Date"/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Repo" representedClassName="Repo">
+        <attribute name="full_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="html_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="htmlString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Decimal" defaultValueString="0.0">
+            <userInfo/>
+        </attribute>
+        <attribute name="isPrivate" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="repoDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="repos" inverseEntity="User" syncable="YES"/>
+        <userInfo/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="avatar_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gists_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="login" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="repos_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="starred_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="Decimal" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="repos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Repo" inverseName="user" inverseEntity="Repo" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
+        <element name="Repo" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="User" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
