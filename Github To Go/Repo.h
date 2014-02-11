@@ -12,7 +12,7 @@
 
 @interface Repo : NSManagedObject
 
-@property (nonatomic, retain) NSDecimalNumber * id;
+@property (nonatomic, retain) NSDecimalNumber *repoID;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * full_name;
 @property (nonatomic, retain) NSNumber * isPrivate;

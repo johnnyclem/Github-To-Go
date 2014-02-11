@@ -13,8 +13,6 @@
 
 @interface CFMasterViewController () <UISearchBarDelegate>
 
-@property (nonatomic) NSMutableArray *repos;
-
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 @end
@@ -33,8 +31,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    _repos = [NSMutableArray new];
     
 //    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 //
@@ -49,30 +45,48 @@
     [self performSearch:searchBar];
 }
 
-- (IBAction)performSearch:(UISearchBar *)sender
+- (void)findOrCreateNewRepo:(NSDictionary *)repo withExistingRepoID:(NSNumber *)repoID error:(NSError *)error
 {
-    NSLog(@"Performing Search For: %@", sender.text);
-    NSError *error;
-    NSString *searchString = [NSString stringWithFormat:@"https://api.github.com/search/repositories?q=%@", sender.text];
-    NSURL *searchURL = [NSURL URLWithString:searchString];
-    
-    NSData *repoData = [NSData dataWithContentsOfURL:searchURL];
-    NSDictionary *repoDict = [NSJSONSerialization JSONObjectWithData:repoData
-                                                             options:NSJSONReadingMutableContainers
-                                                               error:&error];
-    _repos = [repoDict objectForKey:@"items"];
-    
-    for (NSDictionary *repo in _repos) {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext]];
+    [fetchRequest setPredicate: [NSPredicate predicateWithFormat:@"repoID == %@", repoID]];
+    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey: @"repoID" ascending:YES]]];
+    NSArray *existingRepos = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+
+    if (existingRepos.count) {
+        NSLog(@"Repo %@ Already Exists", repo[@"name"]);
+    } else {
         NSEntityDescription *repoEntity = [NSEntityDescription entityForName:@"Repo" inManagedObjectContext:self.managedObjectContext];
         Repo *newRepo = [[Repo alloc] initWithEntity:repoEntity insertIntoManagedObjectContext:self.managedObjectContext withJSONDictionary:repo];
         [newRepo.managedObjectContext save:&error];
         if (error) {
-            NSLog(@"Error Saving New Object");
-        } else {
-            NSLog(@"Added Repo To Core Data");
+            NSLog(@"Error Saving New Object: %@", error);
         }
     }
-    
+}
+
+- (void)downloadReposForSearchURL:(NSURL *)searchURL
+{
+    NSError *error;
+    NSData *repoData = [NSData dataWithContentsOfURL:searchURL];
+    NSDictionary *repoDict = [NSJSONSerialization JSONObjectWithData:repoData
+                                                             options:NSJSONReadingMutableContainers
+                                                               error:&error];
+
+    for (NSDictionary *repo in [repoDict objectForKey:@"items"]) {
+        [self findOrCreateNewRepo:repo withExistingRepoID:repo[@"id"] error:error];
+    }
+}
+
+- (IBAction)performSearch:(UISearchBar *)sender
+{
+    NSString *searchString = [NSString stringWithFormat:@"https://api.github.com/search/repositories?q=%@", sender.text];
+    NSURL *searchURL = [NSURL URLWithString:searchString];
+
+    [self downloadReposForSearchURL:searchURL];
+//    
+//    NSArray *employeeIDs = [[listOfIDsAsString componentsSeparatedByString:@"\n"]
+//                            sortedArrayUsingSelector: @selector(compare:)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,37 +95,16 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender
-{
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-         // Replace this implementation with code to handle the error appropriately.
-         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
 
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
-//    return [[self.fetchedResultsController sections] count];
+    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    return _repos.count;
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
@@ -123,27 +116,6 @@
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
-        
-        NSError *error = nil;
-        if (![context save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }   
-}
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -207,10 +179,10 @@
     return _fetchedResultsController;
 }    
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView beginUpdates];
-}
+//- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+//{
+//    [self.tableView beginUpdates];
+//}
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
@@ -256,16 +228,6 @@
 {
     [self.tableView endUpdates];
 }
-
-/*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
-}
- */
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {

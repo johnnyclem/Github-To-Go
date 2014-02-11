@@ -11,7 +11,7 @@
 
 @implementation Repo
 
-@dynamic id;
+@dynamic repoID;
 @dynamic name;
 @dynamic full_name;
 @dynamic isPrivate;
@@ -36,7 +36,7 @@
 	id id_ = [dic objectForKey:@"id"];
 	if([id_ isKindOfClass:[NSNumber class]])
 	{
-		self.id = id_;
+		self.repoID = id_;
 	}
     
 	id name_ = [dic objectForKey:@"name"];

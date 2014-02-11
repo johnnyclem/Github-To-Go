@@ -5,13 +5,15 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>5D3ABFF1-FD2A-4E36-ABB3-4ADE7BE5BAE7</string>
+	<string>30FD3F05-3C14-4880-9531-723BF6EDDCB9</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Github To Go</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>61AA0446-127A-49D9-B301-964A96E4D662</key>
 		<string>ssh://github.com/codefellows/sea-b9-ios.git</string>
+		<key>9A26F7A7-C389-4218-8C94-96F31FB3DFC9</key>
+		<string>ssh://github.com/johnnyclem/Github-To-Go.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>ClassPrep/Github To Go/Github To Go.xcodeproj/project.xcworkspace</string>
@@ -19,15 +21,25 @@
 	<dict>
 		<key>61AA0446-127A-49D9-B301-964A96E4D662</key>
 		<string>../../../..</string>
+		<key>9A26F7A7-C389-4218-8C94-96F31FB3DFC9</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/codefellows/sea-b9-ios.git</string>
+	<string>ssh://github.com/johnnyclem/Github-To-Go.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
 	<string>61AA0446-127A-49D9-B301-964A96E4D662</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9A26F7A7-C389-4218-8C94-96F31FB3DFC9</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Github To Go</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

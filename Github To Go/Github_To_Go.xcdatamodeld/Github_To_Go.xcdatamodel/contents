@@ -4,12 +4,12 @@
         <attribute name="full_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="html_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="htmlString" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Decimal" defaultValueString="0.0">
-            <userInfo/>
-        </attribute>
         <attribute name="isPrivate" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="repoDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="repoID" optional="YES" attributeType="Decimal" defaultValueString="0.0">
+            <userInfo/>
+        </attribute>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="repos" inverseEntity="User" syncable="YES"/>
         <userInfo/>
     </entity>
